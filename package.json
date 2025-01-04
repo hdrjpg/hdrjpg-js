@@ -1,0 +1,12 @@
+{
+    "name": "hdrjpg-js",
+    "version": "1.0.0",
+    "description": "The Javascript package to embed HDR images on websites converted using [HDRJPG.com](https://hdrjpg.com)",
+    "main": "src/hdrjpg.js",
+    "scripts": {
+        "test": "echo \"No test specified\""
+    },
+    "keywords": ["hdr", "jpg", "mp4"],
+    "author": " Llorenç Herrera Aznar (hdrjpg.com / Tin.cat)",
+    "license": "MIT"
+}
