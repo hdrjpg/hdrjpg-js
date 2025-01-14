@@ -6,7 +6,7 @@
     "scripts": {
         "test": "echo \"No test specified\""
     },
-    "keywords": ["hdr", "jpg", "mp4"],
+    "keywords": ["hdr", "jpg", "jpeg-xt", "jpeg-xl", "avif"],
     "author": " Llorenç Herrera Aznar (hdrjpg.com / Tin.cat)",
     "license": "MIT"
 }
