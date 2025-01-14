@@ -1,6 +1,6 @@
 {
     "name": "hdrjpg-js",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "The Javascript package to embed HDR images on websites converted using [HDRJPG.com](https://hdrjpg.com)",
     "main": "src/hdrjpg.js",
     "scripts": {
