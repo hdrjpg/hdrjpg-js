@@ -1,12 +1,46 @@
 {
     "name": "hdrjpg-js",
-    "version": "1.1.0",
-    "description": "The Javascript package to embed HDR images on websites converted using [HDRJPG.com](https://hdrjpg.com)",
+    "version": "1.2.0",
+    "description": "Shows HDR photos converted with HDRJPG in HDR in every browser: keeps the gain map JPEG where the browser shows it in HDR, and plays the silent HDR MP4 where it does not.",
+    "type": "module",
     "main": "src/hdrjpg.js",
-    "scripts": {
-        "test": "echo \"No test specified\""
+    "module": "src/hdrjpg.js",
+    "exports": {
+        ".": "./src/hdrjpg.js",
+        "./dist/hdrjpg.min.js": "./dist/hdrjpg.min.js"
     },
-    "keywords": ["hdr", "jpg", "jpeg-xt", "jpeg-xl", "avif"],
-    "author": " Llorenç Herrera Aznar (hdrjpg.com / Tin.cat)",
-    "license": "MIT"
+    "files": [
+        "src",
+        "dist"
+    ],
+    "sideEffects": true,
+    "scripts": {
+        "build": "esbuild src/hdrjpg.js --bundle --format=iife --global-name=hdrjpg --minify --target=es2018 --outfile=dist/hdrjpg.min.js",
+        "test": "node --test test/*.test.js",
+        "prepublishOnly": "npm test && npm run build"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/hdrjpg/hdrjpg-js.git"
+    },
+    "homepage": "https://hdrjpg.com/documentation/embedding",
+    "bugs": "https://github.com/hdrjpg/hdrjpg-js/issues",
+    "keywords": [
+        "hdr",
+        "hdr-images",
+        "gain-map",
+        "ultra-hdr",
+        "jpeg",
+        "avif",
+        "jpeg-xl",
+        "hdr-video",
+        "picture",
+        "safari",
+        "firefox"
+    ],
+    "author": "Llorenç Herrera Aznar (hdrjpg.com / Tin.cat)",
+    "license": "MIT",
+    "devDependencies": {
+        "esbuild": "0.25.10"
+    }
 }
