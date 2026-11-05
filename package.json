@@ -1,7 +1,7 @@
 {
     "name": "hdrjpg-js",
-    "version": "1.2.0",
-    "description": "Shows HDR photos converted with HDRJPG in HDR in every browser: keeps the gain map JPEG where the browser shows it in HDR, and plays the silent HDR MP4 where it does not.",
+    "version": "1.3.0",
+    "description": "Shows HDR photos converted with HDRJPG in HDR in every browser: keeps the gain map JPEG where the browser shows it in HDR, and plays the silent HDR MP4 where it does not, in 10-bit HEVC where the browser plays it.",
     "type": "module",
     "main": "src/hdrjpg.js",
     "module": "src/hdrjpg.js",

@@ -5,6 +5,8 @@
  * An embed is the markup HDRJPG gives you: a <div class="hdrjpg" data-mp4-src="..."> around a <picture>
  * whose <img> is a gain map JPEG. Browsers that show gain map JPEGs in HDR keep the picture untouched;
  * in the others, on an HDR screen, the picture is replaced by the silent HDR MP4 of the same photo.
+ * With a data-mp4-hevc-src too (the mp4-hevc output), browsers that play 10-bit HEVC get that one instead:
+ * smooth gradients, like skies, stay free of banding.
  *
  * https://hdrjpg.com/documentation/embedding
  */
@@ -64,6 +66,44 @@ export function currentEnvironment() {
 }
 
 /**
+ * The type of the mp4-hevc output: HEVC Main 10 (profile 2), up to level 5.1, the 4K level phones decode.
+ */
+export const HEVC_VIDEO_TYPE = 'video/mp4; codecs="hvc1.2.4.L153.B0"';
+
+/**
+ * Which video an embed plays: the HEVC one when the embed has it and the browser can play it, else the H.264 one.
+ *
+ * @param {object} sources
+ * @param {string} sources.mp4Src data-mp4-src
+ * @param {string} [sources.mp4HevcSrc] data-mp4-hevc-src
+ * @param {function(string): string} canPlayType HTMLMediaElement.canPlayType
+ * @returns {string|undefined}
+ */
+export function chooseVideoSource({mp4Src, mp4HevcSrc}, canPlayType) {
+    if (mp4HevcSrc && canPlayType(HEVC_VIDEO_TYPE) !== '') {
+        return mp4HevcSrc;
+    }
+    return mp4Src;
+}
+
+/**
+ * The video to try after the one at failedSrc could not be played: the H.264 one after the HEVC one, and none after
+ * the H.264 one (the embed then shows its picture again).
+ *
+ * @param {object} sources
+ * @param {string} sources.mp4Src data-mp4-src
+ * @param {string} [sources.mp4HevcSrc] data-mp4-hevc-src
+ * @param {string} failedSrc The source that failed, as chooseVideoSource or this function returned it
+ * @returns {string|undefined}
+ */
+export function fallbackVideoSource({mp4Src, mp4HevcSrc}, failedSrc) {
+    if (mp4HevcSrc && failedSrc === mp4HevcSrc && mp4Src && mp4Src !== mp4HevcSrc) {
+        return mp4Src;
+    }
+    return undefined;
+}
+
+/**
  * Replaces the picture with its HDR video in one embed.
  *
  * @param {HTMLElement} element The .hdrjpg element
@@ -99,7 +139,19 @@ export function replaceWithVideo(element) {
         }
     }
 
-    video.src = element.dataset.mp4Src;
+    // A browser can say it plays HEVC and still fail to decode it (on Windows without an HEVC decoder, for example).
+    // The video's error event is the browser's own report of that: try the H.264 video, then give the picture back
+    let src = chooseVideoSource(element.dataset, (type) => video.canPlayType(type));
+    video.addEventListener('error', () => {
+        src = fallbackVideoSource(element.dataset, src);
+        if (src) {
+            video.src = src;
+        } else {
+            video.replaceWith(picture);
+            element.dataset.hdrjpgVideo = 'failed';
+        }
+    });
+    video.src = src;
     picture.replaceWith(video);
     element.dataset.hdrjpgVideo = '';
 }
